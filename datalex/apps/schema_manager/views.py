@@ -7,7 +7,7 @@ from .repositores import dynamic_table_repo_factory
 from .models import DynamicTable
 
 
-class DynamicTableView(mixins.CreateModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class DynamicTableCreateView(mixins.CreateModelMixin, generics.GenericAPIView):
     serializer_class = DynamicTableSerializer
     queryset = DynamicTable.objects.all()
 
@@ -23,7 +23,23 @@ class DynamicTableView(mixins.CreateModelMixin, mixins.UpdateModelMixin, generic
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
+
+class DynamicTableUpdateView(mixins.UpdateModelMixin, generics.GenericAPIView):
+    serializer_class = DynamicTableSerializer
+    queryset = DynamicTable.objects.all()
+
     def put(self, request, *args, **kwargs):
-        updated_table = self.update(request, *args, **kwargs)
-        dynamic_table_repo_factory().update(updated_table)
-        return updated_table
+        return self.update(request, *args, **kwargs)
+
+    @transaction.atomic
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=False)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        dynamic_table_repo_factory().update(serializer.instance)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
