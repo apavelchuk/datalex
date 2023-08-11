@@ -1,0 +1,2 @@
+class DynamicTableRepositoryException(Exception):
+    pass
