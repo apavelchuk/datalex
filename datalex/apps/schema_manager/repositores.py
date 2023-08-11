@@ -2,6 +2,7 @@ from typing import Dict, List, Tuple, Set
 from abc import ABC, abstractmethod
 from functools import lru_cache
 from django.db import connection, models
+from django.db.utils import DataError
 
 from .models import DynamicTable, Field, FieldType
 from .exceptions import DynamicTableRepositoryException
@@ -50,7 +51,10 @@ class DynamicTableRepository(DynamicTableRepositoryInterface):
             for field_to_delete in to_delete:
                 schema_editor.remove_field(old_dynamic_table, field_to_delete)
             for old_field, new_field in to_alter:
-                schema_editor.alter_field(old_dynamic_table, old_field, new_field)
+                try:
+                    schema_editor.alter_field(old_dynamic_table, old_field, new_field)
+                except DataError as exc:
+                    raise DynamicTableRepositoryException(str(exc))
         self.refresh_from_db(updated_schema_model.pk)
         return old_dynamic_table
 

@@ -11,13 +11,11 @@ def validate_fields(fields: List[dict]):
         [Field(**f) for f in fields]
     except ValidationError as exc:
         raise serializers.ValidationError(str(exc))
-    return fields
 
 
 def validate_table_name(new_name: str):
     if not re.match(r'^\w+$', new_name):
         raise serializers.ValidationError("Please use only alphanumeric and underscore symbols for table name.")
-    return new_name
 
 
 class DynamicTableSerializer(serializers.ModelSerializer):
@@ -27,3 +25,8 @@ class DynamicTableSerializer(serializers.ModelSerializer):
     class Meta:
         model = DynamicTable
         fields = ["id", "name", "fields"]
+
+    def to_internal_value(self, data):
+        fields_without_dupes = {f["name"]: f for f in data["fields"]}
+        data["fields"] = list(fields_without_dupes.values())
+        return super().to_internal_value(data)
