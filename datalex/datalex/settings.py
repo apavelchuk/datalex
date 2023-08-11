@@ -53,6 +53,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'datalex.wsgi.application'
+APPEND_SLASH = True
 
 DATABASES = {
     "default": {
