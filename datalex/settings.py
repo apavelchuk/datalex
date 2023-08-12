@@ -1,5 +1,6 @@
 import os
 
+from typing import List
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -9,7 +10,7 @@ SECRET_KEY = "django-insecure-%hymeb5bvo1od1o_anz-)n3f$(h)t_j&6qcc9=2rohq#)33r@$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS: List[str] = []
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -72,7 +73,7 @@ DATABASES = {
     },
 }
 
-AUTH_PASSWORD_VALIDATORS = []
+AUTH_PASSWORD_VALIDATORS: List[str] = []
 
 
 LANGUAGE_CODE = "en-us"

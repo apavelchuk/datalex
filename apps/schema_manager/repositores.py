@@ -24,7 +24,7 @@ class DynamicTableRepositoryInterface(ABC):
 
 class DynamicTableRepository(DynamicTableRepositoryInterface):
     def __init__(self):
-        self.tables: Dict[int, models.Model] = self.init_repo()
+        self.tables = self.init_repo()
 
     def init_repo(self) -> Dict[int, models.Model]:
         tables: Dict[int, models.Model] = {}
@@ -71,7 +71,7 @@ def get_dynamic_table_model(model_name: str, fields: List[dict]) -> models.Model
     typed_fields = [Field(**f) for f in fields]
     model_fields = get_model_fields_from_typed_fields(typed_fields)
     model = type(model_name, (models.Model,), model_fields)
-    model._meta.db_table = get_model_db_table_name(model)
+    model._meta.db_table = get_model_db_table_name(model)  # type: ignore[attr-defined]
     return model
 
 
