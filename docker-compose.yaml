@@ -1,37 +1,31 @@
 version: "3.8"
 
 services:
-  edupalai-db:
+  datalex-db:
     image: postgres:15-alpine
     ports:
       - "5444:5432"
     environment:
       "PGDATA": "/var/lib/postgresql/data/pgdata"
-      "POSTGRES_DB": "edupalai"
-      "POSTGRES_PASSWORD": "edupalai"
-      "POSTGRES_USER": "edupalai"
+      "POSTGRES_DB": "datalex"
+      "POSTGRES_PASSWORD": "datalex"
+      "POSTGRES_USER": "datalex"
       "POTGRES_PORT": 5432
     volumes:
       - ./pgdata:/var/lib/postgresql/data/pgdata
 
-  edupalai:
+  datalex:
     ports:
       - "8000:8000"
-    image: edupalai:latest
+    image: datalex:latest
     build:
       context: .
     depends_on:
-      - edupalai-db
+      - datalex-db
     volumes:
       - .:/app
     environment:
-      ASYNC_DB_CONNECT: "postgresql+asyncpg://edupalai:edupalai@edupalai-db/edupalai"
-      # TEST_DB_CONNECT: "sqlite+aiosqlite:///test.db"
-      GOOGLE_APPLICATION_CREDENTIALS: "YOUR_GCP_KEY"
-      GCP_ENGLISH_VOICE: "en-US-Standard-D"
-      GCP_RUSSIAN_VOICE: "ru-RU-Standard-D"
-      GCP_PUBLIC_CONTENT_BUCKET: "edupalai-public-content"
-      GCP_AI_REPLIES_BUCKET: "edupalai-ai-replies"
-      OPENAI_API_KEY: "YOUR_OPENAI_KEY"
-      OPENAI_COMPLETIONS_MODEL: "text-davinci-003"
-      OPENAI_CHAT_MODEL: "gpt-3.5-turbo-0301"
+      DB_NAME: "datalex"
+      DB_USER: "datalex"
+      DB_PASSWORD: "datalex"
+      DB_HOST: "datalex-db"
