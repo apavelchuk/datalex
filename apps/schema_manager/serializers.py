@@ -27,6 +27,6 @@ class DynamicTableSerializer(serializers.ModelSerializer):
         fields = ["id", "name", "fields"]
 
     def to_internal_value(self, data):
-        fields_without_dupes = {f["name"]: f for f in data["fields"]}
+        fields_without_dupes = {f["name"]: f for f in data.get("fields", [])}
         data["fields"] = list(fields_without_dupes.values())
         return super().to_internal_value(data)
