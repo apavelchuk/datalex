@@ -14,4 +14,4 @@ EXPOSE 8000
 RUN wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh -O /usr/local/bin/wait-for-it.sh && \
     chmod +x /usr/local/bin/wait-for-it.sh
 
-CMD sh -c "wait-for-it.sh datalex-db:5432 -- ./manage.py migrate && ./manage.py collectstatic && ./manage.py runserver 0.0.0.0:8000"
+CMD sh -c "wait-for-it.sh datalex-db:5432 -- ./manage.py migrate && ./manage.py collectstatic --noinput && ./manage.py runserver 0.0.0.0:8000"
