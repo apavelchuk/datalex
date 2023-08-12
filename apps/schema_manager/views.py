@@ -5,13 +5,13 @@ from django.db import transaction
 from django.db.utils import IntegrityError
 
 from .exceptions import DynamicTableRepositoryException
-from .serializers import DynamicTableSerializer
+from .serializers import DynamicTableCreateSerializer, DynamicTableUpdateSerializer
 from .repositores import dynamic_table_repo_factory
 from .models import DynamicTable
 
 
 class DynamicTableCreateView(mixins.CreateModelMixin, generics.GenericAPIView):
-    serializer_class = DynamicTableSerializer
+    serializer_class = DynamicTableCreateSerializer
     queryset = DynamicTable.objects.all()
 
     def post(self, request, *args, **kwargs):
@@ -31,7 +31,7 @@ class DynamicTableCreateView(mixins.CreateModelMixin, generics.GenericAPIView):
 
 
 class DynamicTableUpdateView(mixins.UpdateModelMixin, generics.GenericAPIView):
-    serializer_class = DynamicTableSerializer
+    serializer_class = DynamicTableUpdateSerializer
     queryset = DynamicTable.objects.all()
 
     def put(self, request, *args, **kwargs):

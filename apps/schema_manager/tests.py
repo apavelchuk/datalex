@@ -96,8 +96,9 @@ class TestDynamicTableCreate(ApiTestCase):
 
 class TestDynamicTableUpdate(ApiTestCase):
     def test_add_alter_delete(self):
+        test_table_name = "master_table"
         payload = {
-            "name": "master_table",
+            "name": test_table_name,
             "fields": [
                 {"name": "field1", "field_type": "number"},
                 {"name": "field2", "field_type": "string"},
@@ -106,6 +107,7 @@ class TestDynamicTableUpdate(ApiTestCase):
         resp = self.api_client.post(reverse("table-create"), payload, format="json")
         self.assertEqual(resp.status_code, 201)
 
+        del payload["name"]
         payload["fields"][0]["field_type"] = "boolean"
         payload["fields"].append({"name": "field3", "field_type": "number"})
         table_id = DynamicTable.objects.first().pk
@@ -114,18 +116,18 @@ class TestDynamicTableUpdate(ApiTestCase):
         self.assertEqual(DynamicTable.objects.count(), 1)
         self.assertEqual(DynamicTable.objects.first().fields, payload["fields"])
 
-        table_model = get_dynamic_table_model(payload["name"], payload["fields"])
+        table_model = get_dynamic_table_model(test_table_name, payload["fields"])
         table_model.objects.create(field1=False, field2="ewqqwe", field3=321)
         self.assertEqual(table_model.objects.count(), 1)
 
         payload["fields"][0]["field_type"] = "number"
         self.api_client.put(reverse("table-update", kwargs={"pk": table_id}), payload, format="json")
-        get_dynamic_table_model(payload["name"], payload["fields"])
+        get_dynamic_table_model(test_table_name, payload["fields"])
         self.assertEqual(resp.status_code, 200)
 
         payload["fields"][1]["field_type"] = "number"
         resp = self.api_client.put(reverse("table-update", kwargs={"pk": table_id}), payload, format="json")
-        get_dynamic_table_model(payload["name"], payload["fields"])
+        get_dynamic_table_model(test_table_name, payload["fields"])
         # expect unable to convert string ("ewqqwe") to number type
         self.assertEqual(resp.status_code, 400)
         # check the rollback happened and we did not store any data

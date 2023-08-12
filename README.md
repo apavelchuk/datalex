@@ -19,7 +19,7 @@ Only "string", "number" and "boolean" are available as field types.
 curl --location 'localhost:8000/api/table' \
 --header 'Content-Type: application/json' \
 --data '{
-    "name": "first_table5",
+    "name": "first_table",
     "fields": [{"name": "f1", "field_type": "boolean"}, {"name": "f2", "field_type": "number"}]
 }'
 ```
@@ -32,7 +32,6 @@ Updates your table sctructure entirely, i.e. you must provide your schema in ful
 curl --location --request PUT 'localhost:8000/api/table/1' \
 --header 'Content-Type: application/json' \
 --data '{
-    "name": "first_table",
     "fields": [{"name": "new_bool_field", "field_type": "boolean"}, {"name": "new_string_field", "field_type": "string"}]
 }'
 ```
