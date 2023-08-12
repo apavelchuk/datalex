@@ -18,9 +18,9 @@ class Field(BaseModel):
     name: str
     field_type: FieldType
 
-    @validator('name')
+    @validator("name")
     def validate_name(cls, value):
-        if not re.match(r'^\w+$', value):
+        if not re.match(r"^\w+$", value):
             raise ValueError("my_field must contain only [A-Za-z_0-9] symbols.")
         return value
 

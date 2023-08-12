@@ -14,7 +14,7 @@ def validate_fields(fields: List[dict]):
 
 
 def validate_table_name(new_name: str):
-    if not re.match(r'^\w+$', new_name):
+    if not re.match(r"^\w+$", new_name):
         raise serializers.ValidationError("Please use only alphanumeric and underscore symbols for table name.")
 
 

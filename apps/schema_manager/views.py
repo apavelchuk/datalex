@@ -48,7 +48,7 @@ class DynamicTableUpdateView(mixins.UpdateModelMixin, generics.GenericAPIView):
         except DynamicTableRepositoryException as exc:
             raise ValidationError(exc)
 
-        if getattr(instance, '_prefetched_objects_cache', None):
+        if getattr(instance, "_prefetched_objects_cache", None):
             instance._prefetched_objects_cache = {}
 
         return Response(serializer.data)

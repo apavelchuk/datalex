@@ -102,20 +102,30 @@ def compare_existing_table_to_new_schema(
     old_dynamic_table: models.Model,
     updated_schema_model: DynamicTable,
 ) -> Tuple[List[models.Field], List[Tuple[models.Field, models.Field]], List[models.Field]]:
-    existing_fields = {f.column: f for f in old_dynamic_table._meta.get_fields(include_parents=False) if f.column != "id"}
+    existing_fields = {
+        f.column: f for f in old_dynamic_table._meta.get_fields(include_parents=False) if f.column != "id"
+    }
     processed_fields: Set[str] = set()
     to_create, to_alter, to_delete = {}, {}, []
     for field in updated_schema_model.fields:
         typed_field = Field(**field)
         if typed_field.name not in existing_fields:
             model_field = get_model_field_for_field_type(typed_field.field_type)
-            model_field.column, model_field.name, model_field.verbose_name = typed_field.name, typed_field.name, typed_field.name
+            model_field.column, model_field.name, model_field.verbose_name = (
+                typed_field.name,
+                typed_field.name,
+                typed_field.name,
+            )
             to_create[typed_field.name] = model_field
         else:
             old_field = existing_fields[typed_field.name]
             new_field = get_model_field_for_field_type(typed_field.field_type)
             if type(old_field) != type(new_field):
-                new_field.column, new_field.name, new_field.verbose_name = old_field.column, old_field.column, old_field.column
+                new_field.column, new_field.name, new_field.verbose_name = (
+                    old_field.column,
+                    old_field.column,
+                    old_field.column,
+                )
                 to_alter[typed_field.name] = (old_field, new_field)
             processed_fields.add(typed_field.name)
     unprocessed_field_names = set(existing_fields.keys()) - processed_fields

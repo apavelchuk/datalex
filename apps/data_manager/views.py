@@ -38,7 +38,7 @@ class RowListView(mixins.ListModelMixin, generics.GenericAPIView):
 
     def get_serializer(self, model, page, *args, **kwargs):
         serializer_class = self.get_serializer_class(model)
-        kwargs.setdefault('context', self.get_serializer_context())
+        kwargs.setdefault("context", self.get_serializer_context())
         return serializer_class(page, *args, **kwargs)
 
     def get_serializer_class(self, model: models.Model):
